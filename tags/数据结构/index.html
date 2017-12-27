@@ -6,20 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>skiplist的golang实现 | Joey&#39;blog</title>
+  <title>Tag: 数据结构 | Joey&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="半年前把redis源码看了大部分，这段时间一直在学习Golang的各种东西，想起了以前在redis里面看到的sorted-set数据结构，想着用Golang实现一个。">
-<meta name="keywords" content="golang,数据结构">
-<meta property="og:type" content="article">
-<meta property="og:title" content="skiplist的golang实现">
-<meta property="og:url" content="http://yoursite.com/2017/12/22/skiplist的golang实现/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Joey&#39;blog">
+<meta property="og:url" content="http://yoursite.com/tags/数据结构/index.html">
 <meta property="og:site_name" content="Joey&#39;blog">
-<meta property="og:description" content="半年前把redis源码看了大部分，这段时间一直在学习Golang的各种东西，想起了以前在redis里面看到的sorted-set数据结构，想着用Golang实现一个。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-27T13:52:12.823Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="skiplist的golang实现">
-<meta name="twitter:description" content="半年前把redis源码看了大部分，这段时间一直在学习Golang的各种东西，想起了以前在redis里面看到的sorted-set数据结构，想着用Golang实现一个。">
+<meta name="twitter:title" content="Joey&#39;blog">
   
     <link rel="alternative" href="/atom.xml" title="Joey&#39;blog" type="application/atom+xml">
   
@@ -157,45 +152,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-skiplist的golang实现" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      skiplist的golang实现
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2017" class="archive-year">2017</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2017/12/22/skiplist的golang实现/" class="archive-article-date">
+  	<time datetime="2017-12-22T12:33:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-22</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2017/12/22/skiplist的golang实现/">skiplist的golang实现</a>
     </h1>
   
 
-        
-        <a href="/2017/12/22/skiplist的golang实现/" class="archive-article-date">
-  	<time datetime="2017-12-22T12:33:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>半年前把redis源码看了大部分，这段时间一直在学习Golang的各种东西，想起了以前在redis里面看到的sorted-set数据结构，想着用Golang实现一个。</p>
-<a id="more"></a>
-<h2 id="什么是skipList"><a href="#什么是skipList" class="headerlink" title="什么是skipList"></a>什么是skipList</h2><p>&emsp;&emsp;在计算机科学领域，跳跃链表是一种数据结构，允许快速查询一个有序连续元素的数据链表。快速查询是通过维护一个多层次的链表，且每一层链表中的元素是前一层链表元素的子集。<br>基于并联的链表，其效率可比拟于二叉查找树（对于大多数操作需要O(log n)平均时间）。<br>基本上，跳跃列表是对有序的链表增加上附加的前进链接，增加是以随机化的方式进行的，所以在列表中的查找可以快速的跳过部分列表，因此得名。所有操作都以对数随机化的时间进行。  </p>
-<p>&emsp;&emsp;要查找一个目标元素，起步于头元素和顶层列表，并沿着每个链表搜索，直到到达小于或着等于目标的最后一个元素。通过跟踪起自目标直到到达在更高列表中出现的元素的反向查找路径，在每个链表中预期的步数显而易见是 1/p。所以查找的总体代价是 O((log1/p n) / p)，当p 是常数时是 O(log n)。通过选择不同 p 值，就可以在查找代价和存储代价之间作出权衡。<br>插入和删除的实现非常像相应的链表操作，除了”高层”元素必须在多个链表中插入或删除之外。<br>跳跃列表不像某些传统平衡树数据结构那样提供绝对的最坏情况性能保证，因为用来建造跳跃列表的扔硬币方法总有可能（尽管概率很小）生成一个糟糕的不平衡结构。但是在实际中它工作的很好，随机化平衡方案比在平衡二叉查找树中用的确定性平衡方案容易实现。跳跃列表在并行计算中也很有用，这里的插入可以在跳跃列表不同的部分并行的进行，而不用全局的数据结构重新平衡。[1]</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//每个节点储存k,v，向前跳跃的节点指针，向后一步的节点指针</span></span><br><span class="line"><span class="keyword">type</span> node <span class="keyword">struct</span> &#123;</span><br><span class="line">	forward    []*node</span><br><span class="line">	backward   *node</span><br><span class="line">	key, value <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//每个跳跃表因为要求有序，所以需要一个比较函数，header指针为了更好的查找，不是必要的。</span></span><br><span class="line"><span class="keyword">type</span> SkipList <span class="keyword">struct</span> &#123;</span><br><span class="line">	lessThan <span class="function"><span class="keyword">func</span><span class="params">(l, r <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span></span><br><span class="line"><span class="function">	<span class="title">header</span>   *<span class="title">node</span></span></span><br><span class="line"><span class="function">	<span class="title">footer</span>   *<span class="title">node</span></span></span><br><span class="line"><span class="function">	<span class="title">length</span>   <span class="title">int</span></span></span><br><span class="line"><span class="function">	<span class="title">MaxLevel</span> <span class="title">int</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function">//<span class="title">SkipList</span>会实现这个接口以实现迭代</span></span><br><span class="line"><span class="function"><span class="title">type</span> <span class="title">Iterator</span> <span class="title">interface</span></span> &#123;</span><br><span class="line">	<span class="comment">//如果可向后迭代则指向下一个节点，并返回true，否则返回false</span></span><br><span class="line">	Next() (ok <span class="keyword">bool</span>)</span><br><span class="line">	<span class="comment">//如果可向前迭代则指向上一个节点，并返回true，否则返回false</span></span><br><span class="line">	Previous() (ok <span class="keyword">bool</span>)</span><br><span class="line">	<span class="comment">//返回当前节点的key</span></span><br><span class="line">	Key() <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">	<span class="comment">//返回当前节点的value</span></span><br><span class="line">	Value() <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">	<span class="comment">//迭代器移至某个key的位置</span></span><br><span class="line">	Seek(key <span class="keyword">interface</span>&#123;&#125;) (ok <span class="keyword">bool</span>)</span><br><span class="line">	<span class="comment">//关闭迭代器并回收资源，不是必要的，但对GC有好处</span></span><br><span class="line">	Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">func (s *SkipList) Get(key interface&#123;&#125;) (value interface&#123;&#125;, ok bool) &#123;</span><br><span class="line">	candidate := s.getPath(s.header, nil, key)</span><br><span class="line">	if candidate == nil || candidate.key != key &#123;</span><br><span class="line">		return nil, false</span><br><span class="line">	&#125;</span><br><span class="line">	return candidate.value, true</span><br><span class="line">&#125;</span><br><span class="line">//从头结点开始查找候选节点，如果候选节点存在并且它的key等于需要查找的key，则找到返回。</span><br><span class="line">//getPath方法，是实现SkipList关键之一</span><br><span class="line">func (s *SkipList) getPath(current *node, update []*node, key interface&#123;&#125;) *node &#123;</span><br><span class="line">	depth := len(current.forward) - 1</span><br><span class="line"></span><br><span class="line">	for i := depth; i &gt;= 0; i-- &#123;</span><br><span class="line">		for current.forward[i] != nil &amp;&amp; s.lessThan(current.forward[i].key, key) &#123;</span><br><span class="line">			current = current.forward[i]</span><br><span class="line">		&#125;</span><br><span class="line">		if update != nil &#123;</span><br><span class="line">			update[i] = current</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return current.next()</span><br><span class="line">&#125;</span><br><span class="line">//从SkipList的最高层级开始遍历，如果后续节点不为空，并且后续节点的key小于要查找的key，那么SkipList向后跳跃一个节点;如果只是查找，update为nil，更新则需要修改相关节点的指针</span><br></pre></td></tr></table></figure>
-<h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">func (s *SkipList) Set(key, value interface&#123;&#125;) &#123;</span><br><span class="line">	if key == nil &#123;</span><br><span class="line">		panic(&quot;nil key is not supported&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	update := make([]*node, s.level()+1, s.effectiveMaxLevel()+1)</span><br><span class="line">	candidate := s.getPath(s.header, update, key)</span><br><span class="line"></span><br><span class="line">	if candidate != nil &amp;&amp; candidate.key == key &#123;</span><br><span class="line">		candidate.value = value</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	newLevel := s.randomLevel()</span><br><span class="line"></span><br><span class="line">	if currentLevel := s.level(); newLevel &gt; currentLevel &#123;</span><br><span class="line">		for i := currentLevel + 1; i &lt;= newLevel; i++ &#123;</span><br><span class="line">			update = append(update, s.header)</span><br><span class="line">			s.header.forward = append(s.header.forward, nil)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	newNode := &amp;node&#123;</span><br><span class="line">		forward: make([]*node, newLevel+1, s.effectiveMaxLevel()+1),</span><br><span class="line">		key:     key,</span><br><span class="line">		value:   value,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if previous := update[0]; previous.key != nil &#123;</span><br><span class="line">		newNode.backward = previous</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for i := 0; i &lt;= newLevel; i++ &#123;</span><br><span class="line">		newNode.forward[i] = update[i].forward[i]</span><br><span class="line">		update[i].forward[i] = newNode</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	s.length++</span><br><span class="line"></span><br><span class="line">	if newNode.forward[0] != nil &#123;</span><br><span class="line">		if newNode.forward[0].backward != newNode &#123;</span><br><span class="line">			newNode.forward[0].backward = newNode</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if s.footer == nil || s.lessThan(s.footer.key, key) &#123;</span><br><span class="line">		s.footer = newNode</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">//先去查找skiplist中是否有插入节点的key值，如果有，就直接更新该key的value，没有的话，已经找到了需要插入的位置，更新对应的节点即可[2]</span><br></pre></td></tr></table></figure>
-<p>每插入一个节点，都给予随机层级<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func (s SkipList) randomLevel() (n int) &#123;</span><br><span class="line">	for n = 0; n &lt; s.effectiveMaxLevel() &amp;&amp; rand.Float64() &lt; p; n++ &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	return n</span><br><span class="line">&#125;</span><br><span class="line">//关于P的选取，大多数实现为0.25或0.5，原因可以参考skiplist的论文[3]</span><br></pre></td></tr></table></figure></p>
-<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">func (s *SkipList) Delete(key interface&#123;&#125;) (value interface&#123;&#125;, ok bool) &#123;</span><br><span class="line">	if key == nil &#123;</span><br><span class="line">		panic(&quot;nil key is not supported&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	update := make([]*node, s.level()+1, s.effectiveMaxLevel())</span><br><span class="line">	candidate := s.getPath(s.header, update, key)</span><br><span class="line">	if candidate == nil || candidate.key != key &#123;</span><br><span class="line">		return nil, false</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	previous := candidate.backward</span><br><span class="line">	if s.footer == candidate &#123;</span><br><span class="line">		s.footer = previous</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	next := candidate.next()</span><br><span class="line">	if next != nil &#123;</span><br><span class="line">		next.backward = previous</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for i := 0; i &lt;= s.level() &amp;&amp; update[i].forward[i] == candidate; i++ &#123;</span><br><span class="line">		update[i].forward[i] = candidate.forward[i]</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for s.level() &gt; 0 &amp;&amp; s.header.forward[s.level()] == nil &#123;</span><br><span class="line">		s.header.forward = s.header.forward[:s.level()]</span><br><span class="line">	&#125;</span><br><span class="line">	s.length--</span><br><span class="line"></span><br><span class="line">	return candidate.value, true</span><br><span class="line">&#125;</span><br><span class="line">//找到对应key值节点所在的位置，并删除相关节点，返回节点的value和true</span><br></pre></td></tr></table></figure>
-<p>完整的实现：<br><a href="https://github.com/leobuzhi/skipList-go" target="_blank" rel="noopener">https://github.com/leobuzhi/skipList-go</a></p>
-<p>[1] <a href="https://zh.wikipedia.org/wiki/%E8%B7%B3%E8%B7%83%E5%88%97%E8%A1%A8" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E8%B7%B3%E8%B7%83%E5%88%97%E8%A1%A8</a><br>[2] chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=http%3A%2F%2Fwww.cl.cam.ac.uk%2Fteaching%2F0506%2FAlgorithms%2Fskiplists.pdf<br>[3] chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/pdf-viewer/web/viewer.html?file=https%3A%2F%2Fcs.uwaterloo.ca%2Fresearch%2Ftr%2F1993%2F28%2Froot2side.pdf</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -211,7 +197,7 @@
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -224,104 +210,17 @@
 	</div>
 
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2017/12/22/skiplist的golang实现/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
   
   
-    <a href="/2017/12/08/golang123源码分析/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">golang123源码分析</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -344,9 +243,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: true,
 		toc_hide_index: true,
