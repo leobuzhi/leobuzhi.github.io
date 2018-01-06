@@ -6,20 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>关于帧同步与状态同步 | Joey&#39;blog</title>
+  <title>Archives: 2018/1 | Joey&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。">
-<meta name="keywords" content="同步技术,游戏开发">
-<meta property="og:type" content="article">
-<meta property="og:title" content="关于帧同步与状态同步">
-<meta property="og:url" content="http://yoursite.com/2017/09/24/关于帧同步与状态同步/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Joey&#39;blog">
+<meta property="og:url" content="http://yoursite.com/archives/2018/01/index.html">
 <meta property="og:site_name" content="Joey&#39;blog">
-<meta property="og:description" content="游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-07T13:56:55.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于帧同步与状态同步">
-<meta name="twitter:description" content="游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。">
+<meta name="twitter:title" content="Joey&#39;blog">
   
     <link rel="alternative" href="/atom.xml" title="Joey&#39;blog" type="application/atom+xml">
   
@@ -157,111 +152,48 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-关于帧同步与状态同步" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      关于帧同步与状态同步
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2018/01/06/用Glide管理Golang项目依赖/" class="archive-article-date">
+  	<time datetime="2018-01-06T14:31:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2018/01/06/用Glide管理Golang项目依赖/">用Glide管理Golang项目依赖</a>
     </h1>
   
 
-        
-        <a href="/2017/09/24/关于帧同步与状态同步/" class="archive-article-date">
-  	<time datetime="2017-09-24T14:12:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。</p>
-<a id="more"></a>
-<ul>
-<li>从操作方式上可以分为回合操作、即时操作。</li>
-<li>从交互方式上可以分为离线战斗、联网战斗。</li>
-</ul>
-<p>举例：</p>
-<ul>
-<li>阴阳师：联网战斗、回合操作</li>
-<li>神无月：离线战斗、联网战斗、回合操作</li>
-<li>王者荣耀：联网战斗、即时操作</li>
-<li>全民超神：联网战斗、即时操作</li>
-<li>COC：离线战斗</li>
-<li>海岛奇兵：离线战斗</li>
-</ul>
-<p>对于联网游戏来说，同步方式分为两种，帧同步、状态同步（CS同步）</p>
-<ul>
-<li>状态同步：将玩家的状态行为同步的方式，一般情况下，AI逻辑，技能逻辑，战斗计算都由服务器运算，算完了发给客户端展示。比如A玩家向B玩家发起攻击技能，服务器经过计算后，B玩家应该扣掉100血，服务器发给A,B玩家一些信息，A,B玩家分别更新自己本地的动作状态、buff状态、位置信息等等。一般来说状态同步的数据量会比较大，所以为了减轻服务器的计算压力，会把一部分计算放到客户端来做，但是服务器一定做校验。</li>
-<li>帧同步：RTS游戏常常采用的同步技术，在单位数量很多的情况下，状态同步需要的计算量非常大，如果同步所有状态的话，对网络压力以及服务器计算都是非常大的挑战，帧同步只同步玩家的操作，每个玩家接受到别人的操作以后，通过本地的运算，可以达到一致的状态。这样随着单位的大量增加，同步量也不会变的非常大。比如皇室战争就是采用帧同步，A玩家可以把自己放置卡牌的位置坐标和卡牌ID发给服务器，服务器经过校验发过来的指令后可以转发给B玩家，B玩家在本地计算结果。这种方式可以很好的做到战斗回放。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>战斗分类/同步技术</th>
-<th>状态同步</th>
-<th>帧同步</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>离线战斗、联网战斗</td>
-<td>大部分计算逻辑在服务器，把结果发给客户端，一般需要服务器开发人员将服务器的逻辑写在客户端可以运行的模块</td>
-<td>大部分逻辑在客户端，要求战斗逻辑部分与显示部分分离可以让逻辑部分代码客户端服务器公用，这部分代码可以来实现即时战斗和战斗校验</td>
-</tr>
-<tr>
-<td>PVP、PVE战斗</td>
-<td>可以实现</td>
-<td>可以实现</td>
-</tr>
-<tr>
-<td>网络流量</td>
-<td>流量大</td>
-<td>流量小</td>
-</tr>
-<tr>
-<td>网络卡的表现</td>
-<td>频繁出现玩家瞬移、掉血、回位等等</td>
-<td>网络卡的时候整个战斗会停止，网络正常的时候会快速播放以让进度恢复正常</td>
-</tr>
-<tr>
-<td>实现难度</td>
-<td>需要客户端和服务器开发人员都比较有经验，需要不断的优化状态同步的方式，客户端需要做差值处理</td>
-<td>客户端按照单机方式实现，保证显示层和逻辑层是分离的，保证显示层和逻辑层是分离的，保证逻辑层不要用到浮点数，不要用到不确定顺序的逻辑结构</td>
-</tr>
-</tbody>
-</table>
-<p>总结：</p>
-<ul>
-<li>状态同步：<br>服务器实现整个游戏逻辑，安全性高，客户端压力减轻；客户端和服务器有频繁的数据同步，网络流量多，服务器实现整套游戏逻辑，承载压力大；开发效率比帧同步差。</li>
-<li>帧同步：服务器只需要做转发逻辑，承载压力大；客户端与服务器仅需同步输入包，网络流少；所有逻辑都在客户端，减少了服务器开发与客户端开发的沟通，开发效率高。逻辑全在客户端，导致反外挂压力大；战斗核心逻辑，需要保证输入输出一致性，对开发人员要求高，调试难。</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">同步技术</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">游戏开发</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Golang</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -274,113 +206,17 @@
 	</div>
 
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2017/09/24/关于帧同步与状态同步/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2017/12/08/malloc之后再进行free，free的内存空间一定被OS回收了吗/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          malloc之后再进行free，free的内存空间一定被OS回收了吗
-        
-      </div>
-    </a>
   
   
-    <a href="/2017/09/23/mysql技术内幕-innodb存储引擎读书笔记第一章/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">mysql技术内幕-innodb存储引擎读书笔记第一章</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -403,8 +239,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true,

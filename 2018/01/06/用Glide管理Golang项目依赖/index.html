@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>关于帧同步与状态同步 | Joey&#39;blog</title>
+  <title>用Glide管理Golang项目依赖 | Joey&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。">
-<meta name="keywords" content="同步技术,游戏开发">
+  <meta name="description" content="Go 语言原生包管理的缺陷在 Go 还未像今天这么成熟之前，go get 被许多人痛批过，被骂成”脑残想出来的包管理机制”、“懒到连个软件仓库都不愿意维护”等。">
+<meta name="keywords" content="Golang">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于帧同步与状态同步">
-<meta property="og:url" content="http://yoursite.com/2017/09/24/关于帧同步与状态同步/index.html">
+<meta property="og:title" content="用Glide管理Golang项目依赖">
+<meta property="og:url" content="http://yoursite.com/2018/01/06/用Glide管理Golang项目依赖/index.html">
 <meta property="og:site_name" content="Joey&#39;blog">
-<meta property="og:description" content="游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。">
+<meta property="og:description" content="Go 语言原生包管理的缺陷在 Go 还未像今天这么成熟之前，go get 被许多人痛批过，被骂成”脑残想出来的包管理机制”、“懒到连个软件仓库都不愿意维护”等。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-07T13:56:55.000Z">
+<meta property="og:updated_time" content="2018-01-06T14:34:07.261Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于帧同步与状态同步">
-<meta name="twitter:description" content="游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。">
+<meta name="twitter:title" content="用Glide管理Golang项目依赖">
+<meta name="twitter:description" content="Go 语言原生包管理的缺陷在 Go 还未像今天这么成熟之前，go get 被许多人痛批过，被骂成”脑残想出来的包管理机制”、“懒到连个软件仓库都不愿意维护”等。">
   
     <link rel="alternative" href="/atom.xml" title="Joey&#39;blog" type="application/atom+xml">
   
@@ -157,87 +157,68 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-关于帧同步与状态同步" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-用Glide管理Golang项目依赖" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      关于帧同步与状态同步
+      用Glide管理Golang项目依赖
     </h1>
   
 
         
-        <a href="/2017/09/24/关于帧同步与状态同步/" class="archive-article-date">
-  	<time datetime="2017-09-24T14:12:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
+        <a href="/2018/01/06/用Glide管理Golang项目依赖/" class="archive-article-date">
+  	<time datetime="2018-01-06T14:31:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。</p>
-<a id="more"></a>
+        <h3 id="Go-语言原生包管理的缺陷"><a href="#Go-语言原生包管理的缺陷" class="headerlink" title="Go 语言原生包管理的缺陷"></a>Go 语言原生包管理的缺陷</h3><p>在 Go 还未像今天这么成熟之前，go get 被许多人痛批过，被骂成”脑残想出来的包管理机制”、“懒到连个软件仓库都不愿意维护”等。<br><a id="more"></a><br>不过那时候也的确如此，go 的 get 子命令管理依赖有很多大缺陷：</p>
 <ul>
-<li>从操作方式上可以分为回合操作、即时操作。</li>
-<li>从交互方式上可以分为离线战斗、联网战斗。</li>
+<li>能拉取源码的平台很有限，绝大多数依赖的是 github.com</li>
+<li>不能区分版本，以至于令开发者以最后一项包名作为版本划分</li>
+<li>依赖 列表/关系 无法持久化到本地，需要找出所有依赖包然后一个个 go get</li>
+<li>只能依赖本地全局仓库（GOPATH/GOROOT），无法将库放置于局部仓库（$PROJECT_HOME/vendor）</li>
 </ul>
-<p>举例：</p>
+<h3 id="Go-的第三方包管理"><a href="#Go-的第三方包管理" class="headerlink" title="Go 的第三方包管理"></a>Go 的第三方包管理</h3><p>在 Go 的包管理和依赖机制不完善的时候已经涌现一批包管理的最佳实践出来，在 Go 1.5 新增了实验特性 GO15VENDOREXPERIMENT 以后更是如雨后春笋一般一个个冒出来。此时，Go 官方的意图展现出来，才生生的打脸了那些瞧不起 Go 团队的人。</p>
+<p>Go 提供了原始的 go get ，让第三方包管理可以基于 go get 做扩展。GO15VENDOREXPERIMENT 特性让局部依赖成为现实。Go 官方在给第三方包管理营造条件以及引导开发者用户至所推荐的方向，促进社区的繁荣。证明了一个语言技术的生态不仅仅只能靠官方或者取决于官方的完善程度。（要知道 Java 所做更是少得可怜，但是不缺乏出现 Maven 那样庞大的平台和 Gradle 这样强大的工具）</p>
+<p>解释：GO15VENDOREXPERIMENT 是 Go 1.5 版本新增的一个环境变量，如果将值改为 1 则表示启用。它可以将项目根目录名为 vendor 的目录添加到 Go 的库搜寻路径中，实现一个局部依赖的效果。<br>这个特性在 1.5 版本作为实验特性被添加，1.6 中默认被启用，1.7 移除变量加入标准中。</p>
+<h3 id="Glide"><a href="#Glide" class="headerlink" title="Glide"></a>Glide</h3><p>Glide 是众多实现 GO15VENDOREXPERIMENT 特性的包管理工具之一，但它是本文最为推荐的，具体为什么推荐它，原因很简单，因为它目前最受关注。</p>
+<p>几大主要功能：</p>
 <ul>
-<li>阴阳师：联网战斗、回合操作</li>
-<li>神无月：离线战斗、联网战斗、回合操作</li>
-<li>王者荣耀：联网战斗、即时操作</li>
-<li>全民超神：联网战斗、即时操作</li>
-<li>COC：离线战斗</li>
-<li>海岛奇兵：离线战斗</li>
+<li>持久化依赖列表至配置文件中，包括依赖版本（支持范围限定）以及私人仓库等</li>
+<li>持久化关系树至 lock 文件中（类似于 yarn 和 cargo），以重复拉取相同版本依赖</li>
+<li>兼容 go get 所支持的版本控制系统：Git, Bzr, HG, and SVN</li>
+<li>支持 GO15VENDOREXPERIMENT 特性，使得不同项目可以依赖相同项目的不同版本</li>
+<li>可以导入其他工具配置，例如： Godep, GPM, Gom, and GB</li>
 </ul>
-<p>对于联网游戏来说，同步方式分为两种，帧同步、状态同步（CS同步）</p>
-<ul>
-<li>状态同步：将玩家的状态行为同步的方式，一般情况下，AI逻辑，技能逻辑，战斗计算都由服务器运算，算完了发给客户端展示。比如A玩家向B玩家发起攻击技能，服务器经过计算后，B玩家应该扣掉100血，服务器发给A,B玩家一些信息，A,B玩家分别更新自己本地的动作状态、buff状态、位置信息等等。一般来说状态同步的数据量会比较大，所以为了减轻服务器的计算压力，会把一部分计算放到客户端来做，但是服务器一定做校验。</li>
-<li>帧同步：RTS游戏常常采用的同步技术，在单位数量很多的情况下，状态同步需要的计算量非常大，如果同步所有状态的话，对网络压力以及服务器计算都是非常大的挑战，帧同步只同步玩家的操作，每个玩家接受到别人的操作以后，通过本地的运算，可以达到一致的状态。这样随着单位的大量增加，同步量也不会变的非常大。比如皇室战争就是采用帧同步，A玩家可以把自己放置卡牌的位置坐标和卡牌ID发给服务器，服务器经过校验发过来的指令后可以转发给B玩家，B玩家在本地计算结果。这种方式可以很好的做到战斗回放。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>战斗分类/同步技术</th>
-<th>状态同步</th>
-<th>帧同步</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>离线战斗、联网战斗</td>
-<td>大部分计算逻辑在服务器，把结果发给客户端，一般需要服务器开发人员将服务器的逻辑写在客户端可以运行的模块</td>
-<td>大部分逻辑在客户端，要求战斗逻辑部分与显示部分分离可以让逻辑部分代码客户端服务器公用，这部分代码可以来实现即时战斗和战斗校验</td>
-</tr>
-<tr>
-<td>PVP、PVE战斗</td>
-<td>可以实现</td>
-<td>可以实现</td>
-</tr>
-<tr>
-<td>网络流量</td>
-<td>流量大</td>
-<td>流量小</td>
-</tr>
-<tr>
-<td>网络卡的表现</td>
-<td>频繁出现玩家瞬移、掉血、回位等等</td>
-<td>网络卡的时候整个战斗会停止，网络正常的时候会快速播放以让进度恢复正常</td>
-</tr>
-<tr>
-<td>实现难度</td>
-<td>需要客户端和服务器开发人员都比较有经验，需要不断的优化状态同步的方式，客户端需要做差值处理</td>
-<td>客户端按照单机方式实现，保证显示层和逻辑层是分离的，保证显示层和逻辑层是分离的，保证逻辑层不要用到浮点数，不要用到不确定顺序的逻辑结构</td>
-</tr>
-</tbody>
-</table>
-<p>总结：</p>
-<ul>
-<li>状态同步：<br>服务器实现整个游戏逻辑，安全性高，客户端压力减轻；客户端和服务器有频繁的数据同步，网络流量多，服务器实现整套游戏逻辑，承载压力大；开发效率比帧同步差。</li>
-<li>帧同步：服务器只需要做转发逻辑，承载压力大；客户端与服务器仅需同步输入包，网络流少；所有逻辑都在客户端，减少了服务器开发与客户端开发的沟通，开发效率高。逻辑全在客户端，导致反外挂压力大；战斗核心逻辑，需要保证输入输出一致性，对开发人员要求高，调试难。</li>
-</ul>
+<p>安装 Glide：<br>Linux/Mac: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://glide.sh/get | sh</span><br></pre></td></tr></table></figure>
+<p>Windows:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/Masterminds/glide</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用-Glide"><a href="#使用-Glide" class="headerlink" title="使用 Glide"></a>使用 Glide</h3><p>假若已存在项目（rest 的 dome 代码）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;github.com/ant0ine/go-json-rest/rest&quot;</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">	&quot;net/http&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	api := rest.NewApi()</span><br><span class="line">	api.Use(rest.DefaultDevStack...)</span><br><span class="line">	api.SetApp(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) &#123;</span><br><span class="line">		w.WriteJson(map[string]string&#123;&quot;Body&quot;: &quot;Hello World!&quot;&#125;)</span><br><span class="line">	&#125;))</span><br><span class="line">	log.Fatal(http.ListenAndServe(&quot;:8080&quot;, api.MakeHandler()))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>根目录执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glide install</span><br></pre></td></tr></table></figure></p>
+<p>Glide 会以交互的方式构建配置文件，并且自动寻找项目的所有依赖下载至 vendor 目录并注册进 glide.yaml 中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── glide.lock</span><br><span class="line">├── glide.yaml</span><br><span class="line">├── main.go</span><br><span class="line">└── vendor</span><br></pre></td></tr></table></figure></p>
+<p>glide.yaml:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">package: golang.bluerain.io/learn-golang/glide</span><br><span class="line">import:</span><br><span class="line">- package: github.com/ant0ine/go-json-rest</span><br><span class="line">  version: v3.3.2</span><br><span class="line">  subpackages:</span><br><span class="line">  - rest</span><br></pre></td></tr></table></figure></p>
+<p>如果我们想手动添加一个依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glide get github.com/go-resty/resty#~v0.11</span><br></pre></td></tr></table></figure></p>
+<p>glide get 类似于 go get，但是它支持仓库标签（后面的 v0.11 表示版本即标签），不仅如此，它甚至可以控制版本到某个 commit 。注意：~v0.11 是一个范围限定。</p>
+<p>此时的 glide.yaml:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package: golang.bluerain.io/learn-golang/glide</span><br><span class="line">import:</span><br><span class="line">- package: github.com/ant0ine/go-json-rest</span><br><span class="line">  version: v3.3.2</span><br><span class="line">  subpackages:</span><br><span class="line">  - rest</span><br><span class="line">- package: github.com/go-resty/resty</span><br><span class="line">  version: ~v0.11</span><br></pre></td></tr></table></figure></p>
+<p>目录树：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── glide.lock</span><br><span class="line">├── glide.yaml</span><br><span class="line">├── main.go</span><br><span class="line">└── vendor</span><br><span class="line">    └── github.com</span><br><span class="line">        ├── ant0ine</span><br><span class="line">        │   └── go-json-rest</span><br><span class="line">        └── go-resty</span><br><span class="line">            └── resty</span><br></pre></td></tr></table></figure></p>
+<p>如果你想初始化一个为零的项目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glide init</span><br></pre></td></tr></table></figure></p>
+<p>以交互的方式定义完配置文件以后，跟上面的使用方法一致。<br>如果想更新依赖版本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glide up</span><br></pre></td></tr></table></figure></p>
+<p>up == update，up 子命令也可以用来初始化已存在非 Glide 项目，跟 install 一样的效果。</p>
+<p>注意：如果你想移除一个依赖，包括 vendor 目录中的源码。可以在 yaml 中将相应的 -package 节点删除，然后执行 up 命令。</p>
+<p>查看依赖列表：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glide list</span><br></pre></td></tr></table></figure></p>
+<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[INFO]  Package github.com/ant0ine/go-json-rest/rest/trie found in vendor/ folder</span><br><span class="line">[WARN]  Version not set for package github.com/ant0ine/go-json-rest/rest/trie</span><br><span class="line">INSTALLED packages:</span><br><span class="line">        github.com/ant0ine/go-json-rest/rest</span><br><span class="line">        github.com/ant0ine/go-json-rest/rest/trie</span><br></pre></td></tr></table></figure></p>
+<p>list 命令会将 vendor 中的依赖已完整包名列出来。注意：上面那个警告的意思是某个子依赖没定义版本信息。</p>
+<h3 id="glide-lock"><a href="#glide-lock" class="headerlink" title="glide.lock"></a>glide.lock</h3><p>lock 文件是一个比较通用的依赖关系持久化机制。在 NodeJs 的 yarn 、Rust 的 Cargo 以及 Ruby 的 Bundler 等工具上同样被使用。它会记录所有的依赖关系树，并且记录初始化时候拉取的具体版本。  </p>
+<p>举个例子：即使两个人都只有一个相同内容的 glide.yaml 文件，但是他们未必拉取的版本是相同的。原因在于版本是可以取范围的：例如上面的: ~v0.11 。</p>
+<p>而 lock 中则会这么记录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">imports:</span><br><span class="line">- name: github.com/go-resty/resty</span><br><span class="line">  version: c45c7bcc0000d1a9ac1b119b2e6043c6540eedea</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，它记录的是某个 commit 的 ID，一个绝对具体的版本。所以在团队开发时，为了确保不出现依赖版本问题，lock 机制是必须的。所以 glide.yaml 和 glide.lock 都需要添加到版本控制当中，被所有成员共享。</p>
+<p>参考：<br><a href="https://github.com/Masterminds/glide" target="_blank" rel="noopener">https://github.com/Masterminds/glide</a><br><a href="http://glide.readthedocs.io/en/latest" target="_blank" rel="noopener">http://glide.readthedocs.io/en/latest</a></p>
 
       
 
@@ -251,11 +232,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">同步技术</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">游戏开发</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Golang</a>
         		</li>
       		
 		</ul>
@@ -322,7 +299,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2017/09/24/关于帧同步与状态同步/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/01/06/用Glide管理Golang项目依赖/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -336,18 +313,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/12/08/malloc之后再进行free，free的内存空间一定被OS回收了吗/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          malloc之后再进行free，free的内存空间一定被OS回收了吗
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/09/23/mysql技术内幕-innodb存储引擎读书笔记第一章/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">mysql技术内幕-innodb存储引擎读书笔记第一章</div>
+    <a href="/2017/12/22/skiplist的golang实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">skiplist的golang实现</div>
       <i class="icon-circle-right"></i>
     </a>
   
