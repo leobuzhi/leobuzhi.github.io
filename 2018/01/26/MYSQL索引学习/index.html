@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Category: 技术 | Joey&#39;blog</title>
+  <title>MYSQL索引学习 | Joey&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Joey&#39;blog">
-<meta property="og:url" content="http://yoursite.com/categories/技术/page/3/index.html">
+  <meta name="description" content="How MySQL Uses Indexes">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MYSQL索引学习">
+<meta property="og:url" content="http://yoursite.com/2018/01/26/MYSQL索引学习/index.html">
 <meta property="og:site_name" content="Joey&#39;blog">
+<meta property="og:description" content="How MySQL Uses Indexes">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-26T13:28:48.726Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Joey&#39;blog">
+<meta name="twitter:title" content="MYSQL索引学习">
+<meta name="twitter:description" content="How MySQL Uses Indexes">
   
     <link rel="alternative" href="/atom.xml" title="Joey&#39;blog" type="application/atom+xml">
   
@@ -152,36 +157,74 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-MYSQL索引学习" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/08/07/mysql学习笔记_1/" class="archive-article-date">
-  	<time datetime="2016-08-07T13:11:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-07</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/07/mysql学习笔记_1/">mysql学习笔记(1)</a>
+    <h1 class="article-title" itemprop="name">
+      MYSQL索引学习
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/01/26/MYSQL索引学习/" class="archive-article-date">
+  	<time datetime="2018-01-26T13:25:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="How-MySQL-Uses-Indexes"><a href="#How-MySQL-Uses-Indexes" class="headerlink" title="How MySQL Uses Indexes"></a>How MySQL Uses Indexes</h2><a id="more"></a>
+<h5 id="索引用于快速查找具有特定列值的行"><a href="#索引用于快速查找具有特定列值的行" class="headerlink" title="索引用于快速查找具有特定列值的行"></a>索引用于快速查找具有特定列值的行</h5><p>Indexes are used to find rows with specific column values quickly. Without an index, MySQL must begin with the first row and then read through the entire table to find the relevant rows. The larger the table, the more this costs. If the table has an index for the columns in question, MySQL can quickly determine the position to seek to in the middle of the data file without having to look at all the data. This is much faster than reading every row sequentially.</p>
+<h5 id="主键索引、唯一索引、全文索引"><a href="#主键索引、唯一索引、全文索引" class="headerlink" title="主键索引、唯一索引、全文索引"></a>主键索引、唯一索引、全文索引</h5><p>Most MySQL indexes (PRIMARY KEY, UNIQUE, INDEX, and FULLTEXT) are stored in B-trees. Exceptions: Indexes on spatial data types use R-trees; MEMORY tables also support hash indexes; InnoDB uses inverted lists for FULLTEXT indexes.</p>
+<h5 id="MySQL-uses-indexes-for-these-operations"><a href="#MySQL-uses-indexes-for-these-operations" class="headerlink" title="MySQL uses indexes for these operations:"></a>MySQL uses indexes for these operations:</h5><ul>
+<li>To find the rows matching a WHERE clause quickly.<br>快速查找匹配where子句的行  </li>
+<li>To eliminate rows from consideration. If there is a choice between multiple indexes, MySQL normally uses the index that finds the smallest number of rows (the most selective index).<br>如果有多个索引选择，mysql选择最具有选择性的索引</li>
+<li>If the table has a multiple-column index, any leftmost prefix of the index can be used by the optimizer to look up rows. For example, if you have a three-column index on (col1, col2, col3), you have indexed search capabilities on (col1), (col1, col2), and (col1, col2, col3).<br>如果表有一个多行索引，优化器可以使用索引的最左边的前缀来查找行  </li>
+<li>To retrieve rows from other tables when performing joins. MySQL can use indexes on columns more efficiently if they are declared as the same type and size. In this context, VARCHAR and CHAR are considered the same if they are declared as the same size. For example, VARCHAR(10) and CHAR(10) are the same size, but VARCHAR(10) and CHAR(15) are not.<br>如果类型相同和大小相同，可以更有效的使用索引<h2 id="Primary-Key-Optimization"><a href="#Primary-Key-Optimization" class="headerlink" title="Primary Key Optimization"></a>Primary Key Optimization</h2>The primary key for a table represents the column or set of columns that you use in your most vital queries. It has an associated index, for fast query performance. Query performance benefits from the NOT NULL optimization, because it cannot include any NULL values. With the InnoDB storage engine, the table data is physically organized to do ultra-fast lookups and sorts based on the primary key column or columns.</li>
+</ul>
+<p>If your table is big and important, but does not have an obvious column or set of columns to use as a primary key, you might create a separate column with auto-increment values to use as the primary key. These unique IDs can serve as pointers to corresponding rows in other tables when you join tables using foreign keys.<br>//如果没有明显的主键，可以创建一个自增的主键</p>
+<h2 id="Column-Indexes"><a href="#Column-Indexes" class="headerlink" title="Column Indexes"></a>Column Indexes</h2><p>The most common type of index involves a single column, storing copies of the values from that column in a data structure, allowing fast lookups for the rows with the corresponding column values. The B-tree data structure lets the index quickly find a specific value, a set of values, or a range of values, corresponding to operators such as =, &gt;, ≤, BETWEEN, IN, and so on, in a WHERE clause.</p>
+<h5 id="Index-Prefixes"><a href="#Index-Prefixes" class="headerlink" title="Index Prefixes"></a>Index Prefixes</h5><p>With col_name(N) syntax in an index specification for a string column, you can create an index that uses only the first N characters of the column. Indexing only a prefix of column values in this way can make the index file much smaller. When you index a BLOB or TEXT column, you must specify a prefix length for the index. For example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE test (blob_col BLOB, INDEX(blob_col(10)));</span><br></pre></td></tr></table></figure></p>
+<p>//索引文件限制长度可以使索引更小，如果列类型是BLOB或TEXT ，必须指定长度</p>
+<h5 id="FULLTEXT-Indexes"><a href="#FULLTEXT-Indexes" class="headerlink" title="FULLTEXT Indexes"></a>FULLTEXT Indexes</h5><p>FULLTEXT indexes are used for full-text searches. Only the InnoDB and MyISAM storage engines support FULLTEXT indexes and only for CHAR, VARCHAR, and TEXT columns. Indexing always takes place over the entire column and column prefix indexing is not supported. </p>
+<p>Optimizations are applied to certain kinds of FULLTEXT queries against single InnoDB tables. Queries with these characteristics are particularly efficient:</p>
+<ul>
+<li><p>FULLTEXT queries that only return the document ID, or the document ID and the search rank.</p>
+</li>
+<li><p>FULLTEXT queries that sort the matching rows in descending order of score and apply a LIMIT clause to take the top N matching rows. For this optimization to apply, there must be no WHERE clauses and only a single ORDER BY clause in descending order.</p>
+</li>
+<li><p>FULLTEXT queries that retrieve only the COUNT(*) value of rows matching a search term, with no additional WHERE clauses. Code the WHERE clause as WHERE MATCH(text) AGAINST (‘other_text’), without any &gt; 0 comparison operator.<br>//只有InnoDB和MyISAM存储引擎，CHAR,VARCHAR,TEXT类型的列支持全文索引</p>
+<h5 id="Spatial-Indexes"><a href="#Spatial-Indexes" class="headerlink" title="Spatial Indexes"></a>Spatial Indexes</h5><p>You can create indexes on spatial data types. MyISAM and InnoDB support R-tree indexes on spatial types. Other storage engines use B-trees for indexing spatial types (except for ARCHIVE, which does not support spatial type indexing).</p>
+<h5 id="Indexes-in-the-MEMORY-Storage-Engine"><a href="#Indexes-in-the-MEMORY-Storage-Engine" class="headerlink" title="Indexes in the MEMORY Storage Engine"></a>Indexes in the MEMORY Storage Engine</h5><p>The MEMORY storage engine uses HASH indexes by default, but also supports BTREE indexes.<br>//内存引擎使用哈希索引作为默认索引</p>
+</li>
+</ul>
+<h2 id="Multiple-Column-Indexes"><a href="#Multiple-Column-Indexes" class="headerlink" title="Multiple-Column Indexes"></a>Multiple-Column Indexes</h2><p>MySQL can create composite indexes (that is, indexes on multiple columns). An index may consist of up to 16 columns. For certain data types, you can index a prefix of the column.<br>//MYSQL 能够创建组合索引（即索引在多列上）<br>MySQL can use multiple-column indexes for queries that test all the columns in the index, or queries that test just the first column, the first two columns, the first three columns, and so on. If you specify the columns in the right order in the index definition, a single composite index can speed up several kinds of queries on the same table.</p>
+<p>A multiple-column index can be considered a sorted array, the rows of which contain values that are created by concatenating the values of the indexed columns.  </p>
+<p>If the table has a multiple-column index, any leftmost prefix of the index can be used by the optimizer to look up rows. For example, if you have a three-column index on (col1, col2, col3), you have indexed search capabilities on (col1), (col1, col2), and (col1, col2, col3).<br>//如果表具有多列索引，则优化器可以使用索引的最左边的前缀来查找行</p>
+<p>MySQL cannot use the index to perform lookups if the columns do not form a leftmost prefix of the index. Suppose that you have the SELECT statements shown here:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM tbl_name WHERE col1=val1;</span><br><span class="line">SELECT * FROM tbl_name WHERE col1=val1 AND col2=val2;</span><br><span class="line"></span><br><span class="line">SELECT * FROM tbl_name WHERE col2=val2;</span><br><span class="line">SELECT * FROM tbl_name WHERE col2=val2 AND col3=val3;</span><br></pre></td></tr></table></figure></p>
+<p>If an index exists on (col1, col2, col3), only the first two queries use the index. The third and fourth queries do involve indexed columns, but do not use an index to perform lookups because (col2) and (col2, col3) are not leftmost prefixes of (col1, col2, col3).<br>只有前2行会走索引</p>
+<h2 id="Comparison-of-B-Tree-and-Hash-Indexes"><a href="#Comparison-of-B-Tree-and-Hash-Indexes" class="headerlink" title="Comparison of B-Tree and Hash Indexes"></a>Comparison of B-Tree and Hash Indexes</h2><h5 id="B-Tree-Index-Characteristics"><a href="#B-Tree-Index-Characteristics" class="headerlink" title="B-Tree Index Characteristics"></a>B-Tree Index Characteristics</h5><p>A B-tree index can be used for column comparisons in expressions that use the =, &gt;, &gt;=, &lt;, &lt;=, or BETWEEN operators. The index also can be used for LIKE comparisons if the argument to LIKE is a constant string that does not start with a wildcard character. For example, the following SELECT statements use indexes:<br>//如果like参数是一个不以通配符开始的常量字符串,那么走索引<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM tbl_name WHERE key_col LIKE &apos;Patrick%&apos;;</span><br><span class="line">SELECT * FROM tbl_name WHERE key_col LIKE &apos;Pat%_ck%&apos;;</span><br></pre></td></tr></table></figure></p>
+<p>In the first statement, only rows with ‘Patrick’ &lt;= key_col &lt; ‘Patricl’ are considered. In the second statement, only rows with ‘Pat’ &lt;= key_col &lt; ‘Pau’ are considered.<br>The following SELECT statements do not use indexes:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM tbl_name WHERE key_col LIKE &apos;%Patrick%&apos;;</span><br><span class="line">SELECT * FROM tbl_name WHERE key_col LIKE other_col;</span><br></pre></td></tr></table></figure></p>
+<p>//上面这2句都不会走索引，因为第一句like的参数以通配符开始，第二个like的参数不是常数</p>
+<h5 id="Hash-Index-Characteristics"><a href="#Hash-Index-Characteristics" class="headerlink" title="Hash Index Characteristics"></a>Hash Index Characteristics</h5><p>Hash indexes have somewhat different characteristics from those just discussed:</p>
+<ul>
+<li>They are used only for equality comparisons that use the = or &lt;=&gt; operators (but are very fast). They are not used for comparison operators such as &lt; that find a range of values. Systems that rely on this type of single-value lookup are known as “key-value stores”; to use MySQL for such applications, use hash indexes wherever possible.<br>//只使用等于或者不等于作为比较</li>
+<li>The optimizer cannot use a hash index to speed up ORDER BY operations.<br>(This type of index cannot be used to search for the next entry in order.)<br>//优化器不能使用hash索引加速 ORDER BY 操作</li>
+<li>MySQL cannot determine approximately how many rows there are between two values (this is used by the range optimizer to decide which index to use). This may affect some queries if you change a MyISAM or InnoDB table to a hash-indexed MEMORY table.<br>//使用hash索引不能确定两个值之间有多少行</li>
+<li>Only whole keys can be used to search for a row. (With a B-tree index, any leftmost prefix of the key can be used to find rows.)<br>//必须要整个键才能用于查询</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -193,7 +236,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -206,69 +249,103 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/01/26/MYSQL索引学习/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/06/04/Lua学习笔记/" class="archive-article-date">
-  	<time datetime="2016-06-04T15:16:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-04</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/01/20/CAP理论概述/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CAP理论概述</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/06/04/Lua学习笔记/">Lua学习笔记</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Lua</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/categories/技术/page/2/">&laquo; Prev</a><a class="page-number" href="/categories/技术/">1</a><a class="page-number" href="/categories/技术/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+
+  
+
   
 
 
@@ -292,10 +369,10 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: true,
 		toc_hide_index: true,
 		root: "/",
