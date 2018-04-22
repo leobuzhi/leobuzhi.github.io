@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | Joey&#39;blog</title>
+  <title>2018学习笔记 | Joey&#39;blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Joey&#39;blog">
-<meta property="og:url" content="http://yoursite.com/archives/page/3/index.html">
+  <meta name="description" content="2018 学习笔记，持续更新">
+<meta name="keywords" content="学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018学习笔记">
+<meta property="og:url" content="http://yoursite.com/2018/04/22/2018学习笔记/index.html">
 <meta property="og:site_name" content="Joey&#39;blog">
+<meta property="og:description" content="2018 学习笔记，持续更新">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-22T06:38:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Joey&#39;blog">
+<meta name="twitter:title" content="2018学习笔记">
+<meta name="twitter:description" content="2018 学习笔记，持续更新">
   
     <link rel="alternative" href="/atom.xml" title="Joey&#39;blog" type="application/atom+xml">
   
@@ -152,388 +157,110 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-2018学习笔记" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2018学习笔记
+    </h1>
+  
+
+        
+        <a href="/2018/04/22/2018学习笔记/" class="archive-article-date">
+  	<time datetime="2018-04-22T06:32:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-22</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>2018 学习笔记，持续更新<br><a id="more"></a></p>
+<h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><ol>
+<li>docker inspect lambci/lambda:go1.x</li>
+<li>docker run -it –entrypoint “/bin/sh” lambci/lambda:go1.x</li>
+<li>docker run  –user root –link ffmpeg:ffmpeg -it –entrypoint “/bin/sh” lambci/lambda:go1.x</li>
+<li>docker commit -m “add ffmpeg” 415a227b076f lambci/lambda:go1.x</li>
+</ol>
+<h1 id="aws"><a href="#aws" class="headerlink" title="aws"></a>aws</h1><ol>
+<li>EC2:Should have been called Amazon Virtual Servers</li>
+<li>IAM:Should have been called Users, Keys and Certs</li>
+<li>S3:Should have been called Amazon Unlimited FTP Server</li>
+<li>VPC:Should have been called Amazon Virtual Colocated Rack</li>
+<li>Lambda:Should have been called AWS App Scripts<h3 id="aws-lambda"><a href="#aws-lambda" class="headerlink" title="aws lambda"></a>aws lambda</h3></li>
+</ol>
+<p>1.生成linux二进制文件并挂载到docker上，传入参数为event.json，不从服务器拉取最新docker<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GOOS=linux go build -o ConcatAudio</span><br><span class="line">sam <span class="built_in">local</span> invoke <span class="string">"ConcatAudio"</span> -e event.json --skip-pull-image</span><br></pre></td></tr></table></figure></p>
+<p>2.使用第三方二进制软件时，需要注意到目标docker的体系结构，如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 目标docker为64位centos</span></span><br><span class="line"><span class="comment"># 使用mac版本的ffmpeg</span></span><br><span class="line">$ file ffmpeg</span><br><span class="line">ffmpeg: Mach-O 64-bit executable x86_64</span><br><span class="line"><span class="comment"># 得到的报错信息如下</span></span><br><span class="line">fork/<span class="built_in">exec</span> /var/task/ffmpeg: <span class="built_in">exec</span> format error</span><br></pre></td></tr></table></figure></p>
+<p>3.生成s3事件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sam <span class="built_in">local</span> generate-event s3 --bucket bucketName1  --key keyName1&gt; event_file.json</span><br></pre></td></tr></table></figure></p>
+<p>4.生成api事件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sam <span class="built_in">local</span> generate-event api &gt;api.json</span><br></pre></td></tr></table></figure></p>
+<h3 id="aws-s3"><a href="#aws-s3" class="headerlink" title="aws s3"></a>aws s3</h3><p>1.列出s3上的文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls --region=cn-north-1 s3://url</span><br></pre></td></tr></table></figure></p>
+<h1 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h1><ol>
+<li>生成proto.go文件(golang)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --go_out=plugins=grpc:. *.proto</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="bazel"><a href="#bazel" class="headerlink" title="bazel"></a>bazel</h1><ol>
+<li>添加了新文件需要在BUILD文件的srcs中添加文件名，添加了新依赖需要在deps中声明。或者使用 gazelle{<a href="https://github.com/bazelbuild/bazel-gazelle}（golang项目）" target="_blank" rel="noopener">https://github.com/bazelbuild/bazel-gazelle}（golang项目）</a></li>
+<li>项目中使用的依赖（包括间接依赖）需要<strong><strong>显式</strong></strong>的在项目的WORKSPACE文件中添加，第三方依赖需要加上commit id</li>
+<li><p>在同一个包含有不同的导入路径，需要申明2次，如  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">github_go_repository(</span><br><span class="line">    name = &quot;com_qiniupkg_x&quot;,</span><br><span class="line">    importpath = &quot;qiniupkg.com/x&quot;,</span><br><span class="line">    # 2015-07-21</span><br><span class="line">    commit = &quot;946c4a16076d6d98aeb78619e2bd4012357f7228&quot;,</span><br><span class="line">    package = &quot;qiniu/x&quot;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">github_go_repository(</span><br><span class="line">    name = &quot;com_github_qiniu_x&quot;,</span><br><span class="line">    # 2015-07-21</span><br><span class="line">    commit = &quot;946c4a16076d6d98aeb78619e2bd4012357f7228&quot;,</span><br><span class="line">    package = &quot;qiniu/x&quot;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>别人更新了proto的repo后有缓存导致编译失败，使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> BAZEL_RUNID=<span class="variable">$RANDOM</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用gazelle 生成含有protobuf的BUILD 文件时</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//todo</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="ffmpeg"><a href="#ffmpeg" class="headerlink" title="ffmpeg"></a>ffmpeg</h1><ol>
+<li><p>通过参数使用ffmpeg合并文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -f concat -i test1.mp3 test2.mp3 -c copy -filter_complex amix=inputs=2:duration=first:dropout_transition=2 test3.mp3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过文件列表使用ffmpeg合并文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mylist.txt文件格式</span></span><br><span class="line"><span class="comment"># file test1.mp3 </span></span><br><span class="line"><span class="comment"># file test2.mp3</span></span><br><span class="line">ffmpeg -f concat -i mylist.txt -c copy test3.mp3</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="parser"><a href="#parser" class="headerlink" title="parser"></a>parser</h1><p>解释器3个步骤token -&gt; lexer -&gt; parser</p>
+<ol>
+<li><p>A tokenizer breaks a stream of text into tokens, usually by looking for whitespace (tabs, spaces, new lines).</p>
+</li>
+<li><p>A lexer is basically a tokenizer, but it usually attaches extra context to the tokens – this token is a number, that token is a string literal, this other token is an equality operator.</p>
+</li>
+<li><p>A parser takes the stream of tokens from the lexer and turns it into an abstract syntax tree representing the (usually) program represented by the original text.</p>
+</li>
+</ol>
+<h1 id="工作遇到的坑"><a href="#工作遇到的坑" class="headerlink" title="工作遇到的坑"></a>工作遇到的坑</h1><ol>
+<li>七牛间接依赖的包域名不一致，导致bazel build的时候通不过，github上2017年已有人提issue，但无回复</li>
+<li>由于对bazelrc文件不熟悉导致测试的时候折腾了很久，在项目中，bazel.rc为项目公有文件，.bazelrc 为个人文件 </li>
+<li><p>没注意到七牛sdk的Pfop接口的key需要在七牛上有相应的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//存储空间内指定资源的 URL。此处 URL 所指的资源内容对 mkzip 操作本身没有影响，</span><br><span class="line">//必填是由于 pfop 接口规格要求请求 body 中参数必须包含 bucket 和 key，因此 即使未对空间特定资</span><br><span class="line">//源进行操作，在执行 mkzip 操作时仍然需要指定账号下的特定空间和该空间的已有资源。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>fmt.Printf 或者 fmt.Sprintf 在第一个参数中有%且不传第二个参数时</p>
+</li>
+<li>golang使用exec.Command时，需要注意不能多空格或者少空格，如下：<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">args := <span class="string">"-y -safe 0 -f concat -i "</span> + filesList + <span class="string">" -c:v copy "</span> + genAudioFullName</span><br><span class="line">cmd := exec.Command(<span class="string">"ffmpeg"</span>, strings.Split(args, <span class="string">" "</span>)...)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/09/01/关于weak_ptr的学习/" class="archive-article-date">
-  	<time datetime="2016-09-01T15:04:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/09/01/关于weak_ptr的学习/">关于weak_ptr的学习</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">C/C++</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">学习笔记</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/08/25/关于boost::noncopyable/" class="archive-article-date">
-  	<time datetime="2016-08-25T15:59:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/25/关于boost::noncopyable/">关于boost::noncopyable</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">C/C++</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">boost</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/08/10/关于TCP产生的粘包以及解决方案/" class="archive-article-date">
-  	<time datetime="2016-08-10T15:40:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/10/关于TCP产生的粘包以及解决方案/">关于TCP产生的粘包以及解决方案</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">计算机网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/08/07/mysql学习笔记_2/" class="archive-article-date">
-  	<time datetime="2016-08-07T13:44:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/07/mysql学习笔记_2/">mysql学习笔记(2)</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/08/07/mysql学习笔记_1/" class="archive-article-date">
-  	<time datetime="2016-08-07T13:11:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/07/mysql学习笔记_1/">mysql学习笔记(1)</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/06/04/Lua学习笔记/" class="archive-article-date">
-  	<time datetime="2016-06-04T15:16:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/06/04/Lua学习笔记/">Lua学习笔记</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Lua</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/05/20/The_Linux_Programming_Interface读书笔记/" class="archive-article-date">
-  	<time datetime="2016-05-20T12:49:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-05-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/05/20/The_Linux_Programming_Interface读书笔记/">The_Linux_Programming_Interface读书笔记</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">读书</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/阅读//" class="article-tag-list-link color3">阅读</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/05/20/HelloWorld/" class="archive-article-date">
-  	<time datetime="2016-05-20T12:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-05-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/05/20/HelloWorld/">HelloWorld</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -546,20 +273,103 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/04/22/2018学习笔记/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/04/02/一点工作的感悟/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一点工作的感悟</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+
+  
+
   
 
 
@@ -583,8 +393,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true,

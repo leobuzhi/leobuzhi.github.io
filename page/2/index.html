@@ -154,6 +154,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-关于帧同步与状态同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/24/关于帧同步与状态同步/">关于帧同步与状态同步</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/24/关于帧同步与状态同步/" class="archive-article-date">
+  	<time datetime="2017-09-24T14:12:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>游戏的战斗模块一直是游戏开发的重要部分，对于游戏的同步技术，有必要写一篇博客来深度学习一下。</p>
+        
+          <a class="article-more-a" href="/2017/09/24/关于帧同步与状态同步/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">同步技术</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">游戏开发</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/24/关于帧同步与状态同步/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-mysql技术内幕-innodb存储引擎读书笔记第一章" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -932,93 +1023,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/09/07/关于智能指针源码的学习_上/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-关于weak_ptr的学习" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/01/关于weak_ptr的学习/">关于weak_ptr的学习</a>
-    </h1>
-  
-
-        
-        <a href="/2016/09/01/关于weak_ptr的学习/" class="archive-article-date">
-  	<time datetime="2016-09-01T15:04:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Linux-muduo-C++的1.10 shared_ptr 技术与陷阱中的<br>现成的RAII handle 我认为RAII （资源获取即初始化）是C++ 语言区别于<br>其他所有编程语言的最重要的特性，一个不懂RAII 的C++ 程序员不是一个合格的<br>C++ 程序员。初学C++ 的教条是“new 和delete 要配对，new 了之后要记着delete”；<br>如果使用RAII [CCS，条款13]，要改成“每一个明确的资源配置动作（例如new）都应<br>该在单一语句中执行，并在该语句中立刻将配置获得的资源交给handle 对象（如<br>shared_ptr），程序中一般不出现delete”。shared_ptr 是管理共享资源的利器，需要<br>注意避免循环引用，通常的做法是owner 持有指向child 的shared_ptr，child 持有<br>指向owner 的weak_ptr。<br>
-        
-          <a class="article-more-a" href="/2016/09/01/关于weak_ptr的学习/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">C/C++</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/技术//" class="article-tag-list-link color3">技术</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/09/01/关于weak_ptr的学习/">展开全文 >></a>
         </p>
       
 
