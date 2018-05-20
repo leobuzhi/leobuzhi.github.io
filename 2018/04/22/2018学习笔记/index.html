@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Joey&#39;blog">
 <meta property="og:description" content="2018 学习笔记，持续更新">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-22T06:38:25.000Z">
+<meta property="og:updated_time" content="2018-05-20T14:41:53.172Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2018学习笔记">
 <meta name="twitter:description" content="2018 学习笔记，持续更新">
@@ -179,46 +179,72 @@
       
         <p>2018 学习笔记，持续更新<br><a id="more"></a></p>
 <h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><ol>
-<li>docker inspect lambci/lambda:go1.x</li>
-<li>docker run -it –entrypoint “/bin/sh” lambci/lambda:go1.x</li>
-<li>docker run  –user root –link ffmpeg:ffmpeg -it –entrypoint “/bin/sh” lambci/lambda:go1.x</li>
-<li>docker commit -m “add ffmpeg” 415a227b076f lambci/lambda:go1.x</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect lambci/lambda:go1.x</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --entrypoint <span class="string">"/bin/sh"</span> lambci/lambda:go1.x</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run  --user root --link ffmpeg:ffmpeg -it --entrypoint <span class="string">"/bin/sh"</span> lambci/lambda:go1.x</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit -m <span class="string">"add ffmpeg"</span> 415a227b076f lambci/lambda:go1.x</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd docker</span><br><span class="line">sudo usermod -aG docker <span class="variable">$USER</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>挂载本地目录到docker目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#hostdir和dockerdir都要是绝对路径，如有多个就加多个-v</span></span><br><span class="line">$ docker run -v hostdir:dockerdir</span><br><span class="line"><span class="comment">#使用 -v 参数时如果本地目录不存在 Docker 会自动为你创建一个文件夹，但使用 --mount 参数时如果本地目录不存在，Docker 会报错。推荐使用mount参数。</span></span><br><span class="line"><span class="comment">#Docker 挂载主机目录的默认权限是 读写，用户也可以通过增加 readonly 指定为 只读</span></span><br><span class="line">docker run --mount <span class="built_in">type</span>=<span class="built_in">bind</span>,<span class="built_in">source</span>=/src/webapp,target=/opt/webapp,<span class="built_in">readonly</span></span><br></pre></td></tr></table></figure>
+</li>
 </ol>
 <h1 id="aws"><a href="#aws" class="headerlink" title="aws"></a>aws</h1><ol>
 <li>EC2:Should have been called Amazon Virtual Servers</li>
 <li>IAM:Should have been called Users, Keys and Certs</li>
 <li>S3:Should have been called Amazon Unlimited FTP Server</li>
 <li>VPC:Should have been called Amazon Virtual Colocated Rack</li>
-<li>Lambda:Should have been called AWS App Scripts<h3 id="aws-lambda"><a href="#aws-lambda" class="headerlink" title="aws lambda"></a>aws lambda</h3></li>
+<li><p>Lambda:Should have been called AWS App Scripts</p>
+<h3 id="aws-lambda"><a href="#aws-lambda" class="headerlink" title="aws lambda"></a>aws lambda</h3></li>
+<li><p>生成linux二进制文件并挂载到docker上，传入参数为event.json，不从服务器拉取最新docker</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ GOOS=linux go build -o ConcatAudio</span><br><span class="line">$ sam <span class="built_in">local</span> invoke <span class="string">"ConcatAudio"</span> -e event.json --skip-pull-image</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用第三方二进制软件时，需要注意到目标docker的体系结构，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 目标docker为64位centos</span></span><br><span class="line"><span class="comment"># 使用mac版本的ffmpeg</span></span><br><span class="line">$ file ffmpeg</span><br><span class="line">ffmpeg: Mach-O 64-bit executable x86_64</span><br><span class="line"><span class="comment"># 得到的报错信息如下</span></span><br><span class="line">fork/<span class="built_in">exec</span> /var/task/ffmpeg: <span class="built_in">exec</span> format error</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成s3事件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sam <span class="built_in">local</span> generate-event s3 --bucket bucketName1  --key keyName1&gt; event_file.json</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成api事件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sam <span class="built_in">local</span> generate-event api &gt;api.json</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sam中使用环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sam <span class="built_in">local</span> invoke -n ./testdata/env.json  -e ./testdata/concatApi.json <span class="string">"concatAudio"</span>  --skip-pull-image</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<p>1.生成linux二进制文件并挂载到docker上，传入参数为event.json，不从服务器拉取最新docker<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GOOS=linux go build -o ConcatAudio</span><br><span class="line">sam <span class="built_in">local</span> invoke <span class="string">"ConcatAudio"</span> -e event.json --skip-pull-image</span><br></pre></td></tr></table></figure></p>
-<p>2.使用第三方二进制软件时，需要注意到目标docker的体系结构，如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 目标docker为64位centos</span></span><br><span class="line"><span class="comment"># 使用mac版本的ffmpeg</span></span><br><span class="line">$ file ffmpeg</span><br><span class="line">ffmpeg: Mach-O 64-bit executable x86_64</span><br><span class="line"><span class="comment"># 得到的报错信息如下</span></span><br><span class="line">fork/<span class="built_in">exec</span> /var/task/ffmpeg: <span class="built_in">exec</span> format error</span><br></pre></td></tr></table></figure></p>
-<p>3.生成s3事件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sam <span class="built_in">local</span> generate-event s3 --bucket bucketName1  --key keyName1&gt; event_file.json</span><br></pre></td></tr></table></figure></p>
-<p>4.生成api事件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sam <span class="built_in">local</span> generate-event api &gt;api.json</span><br></pre></td></tr></table></figure></p>
-<h3 id="aws-s3"><a href="#aws-s3" class="headerlink" title="aws s3"></a>aws s3</h3><p>1.列出s3上的文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls --region=cn-north-1 s3://url</span><br></pre></td></tr></table></figure></p>
+<p>注：需要在template.yml 文件中显示写出，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Resources:</span><br><span class="line">  concatAudio:</span><br><span class="line">    Type: AWS::Serverless::Function</span><br><span class="line">    Properties:</span><br><span class="line">      Handler: ConcatAudio</span><br><span class="line">      Timeout: 20</span><br><span class="line">      Runtime: go1.x</span><br><span class="line">      Tracing: Active</span><br><span class="line">      CodeUri: ./concatAudioHandle</span><br><span class="line">      Environment:</span><br><span class="line">        Variables:</span><br><span class="line">          AWS_SRC_BUCKET:</span><br><span class="line">          AWS_DST_BUCKET:</span><br><span class="line">      Events:</span><br><span class="line">        GetEvent:</span><br><span class="line">          Type: Api</span><br><span class="line">          Properties:</span><br><span class="line">            Path: /</span><br><span class="line">            Method: post</span><br></pre></td></tr></table></figure></p>
+<h3 id="aws-s3"><a href="#aws-s3" class="headerlink" title="aws s3"></a>aws s3</h3><ol>
+<li>列出s3上的文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ aws s3 ls s3://&lt;BUCKET_NAME&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 <h1 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h1><ol>
-<li>生成proto.go文件(golang)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --go_out=plugins=grpc:. *.proto</span><br></pre></td></tr></table></figure>
+<li>生成proto.go文件(golang)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ protoc --go_out=plugins=grpc:. *.proto</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h1 id="bazel"><a href="#bazel" class="headerlink" title="bazel"></a>bazel</h1><ol>
 <li>添加了新文件需要在BUILD文件的srcs中添加文件名，添加了新依赖需要在deps中声明。或者使用 gazelle{<a href="https://github.com/bazelbuild/bazel-gazelle}（golang项目）" target="_blank" rel="noopener">https://github.com/bazelbuild/bazel-gazelle}（golang项目）</a></li>
 <li>项目中使用的依赖（包括间接依赖）需要<strong><strong>显式</strong></strong>的在项目的WORKSPACE文件中添加，第三方依赖需要加上commit id</li>
-<li><p>在同一个包含有不同的导入路径，需要申明2次，如  </p>
+<li><p>在同一个包含有不同的导入路径，需要申明2次，如</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">github_go_repository(</span><br><span class="line">    name = &quot;com_qiniupkg_x&quot;,</span><br><span class="line">    importpath = &quot;qiniupkg.com/x&quot;,</span><br><span class="line">    # 2015-07-21</span><br><span class="line">    commit = &quot;946c4a16076d6d98aeb78619e2bd4012357f7228&quot;,</span><br><span class="line">    package = &quot;qiniu/x&quot;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">github_go_repository(</span><br><span class="line">    name = &quot;com_github_qiniu_x&quot;,</span><br><span class="line">    # 2015-07-21</span><br><span class="line">    commit = &quot;946c4a16076d6d98aeb78619e2bd4012357f7228&quot;,</span><br><span class="line">    package = &quot;qiniu/x&quot;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>别人更新了proto的repo后有缓存导致编译失败，使用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> BAZEL_RUNID=<span class="variable">$RANDOM</span></span><br></pre></td></tr></table></figure>
-</li>
 <li><p>使用gazelle 生成含有protobuf的BUILD 文件时</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//todo</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//todo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用testdata的build文件里，test文件应该放在data下，而不是deps下，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">go_test(</span><br><span class="line">    name = &quot;go_default_test&quot;,</span><br><span class="line">    srcs = [&quot;main_test.go&quot;],</span><br><span class="line">    library = &quot;:go_default_library&quot;,</span><br><span class="line">    data = [</span><br><span class="line">        &quot;//testdata:util&quot;,</span><br><span class="line">    ],     </span><br><span class="line">    deps = [</span><br><span class="line">        &quot;@com_github_golang_glog//:go_default_library&quot;,</span><br><span class="line">        &quot;@com_github_stretchr_testify//assert:go_default_library&quot;,</span><br><span class="line">    ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
+<p>在testdata 的build文件中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package(</span><br><span class="line">    default_visibility = [&quot;//visibility:public&quot;],</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">filegroup(</span><br><span class="line">    name = &quot;util&quot;,</span><br><span class="line">    srcs = [</span><br><span class="line">        &quot;audio.mp3&quot;,</span><br><span class="line">    ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
 <h1 id="ffmpeg"><a href="#ffmpeg" class="headerlink" title="ffmpeg"></a>ffmpeg</h1><ol>
 <li><p>通过参数使用ffmpeg合并文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -f concat -i test1.mp3 test2.mp3 -c copy -filter_complex amix=inputs=2:duration=first:dropout_transition=2 test3.mp3</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ffmpeg -f concat -i test1.mp3 test2.mp3 -c copy -filter_complex amix=inputs=2:duration=first:dropout_transition=2 test3.mp3</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>通过文件列表使用ffmpeg合并文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mylist.txt文件格式</span></span><br><span class="line"><span class="comment"># file test1.mp3 </span></span><br><span class="line"><span class="comment"># file test2.mp3</span></span><br><span class="line">ffmpeg -f concat -i mylist.txt -c copy test3.mp3</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mylist.txt文件格式</span></span><br><span class="line"><span class="comment"># file test1.mp3 </span></span><br><span class="line"><span class="comment"># file test2.mp3</span></span><br><span class="line">$ ffmpeg -f concat -i mylist.txt -c copy test3.mp3</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h1 id="parser"><a href="#parser" class="headerlink" title="parser"></a>parser</h1><p>解释器3个步骤token -&gt; lexer -&gt; parser</p>
@@ -230,15 +256,21 @@
 <li><p>A parser takes the stream of tokens from the lexer and turns it into an abstract syntax tree representing the (usually) program represented by the original text.</p>
 </li>
 </ol>
-<h1 id="工作遇到的坑"><a href="#工作遇到的坑" class="headerlink" title="工作遇到的坑"></a>工作遇到的坑</h1><ol>
+<h1 id="工作记录"><a href="#工作记录" class="headerlink" title="工作记录"></a>工作记录</h1><ol>
 <li>七牛间接依赖的包域名不一致，导致bazel build的时候通不过，github上2017年已有人提issue，但无回复</li>
 <li>由于对bazelrc文件不熟悉导致测试的时候折腾了很久，在项目中，bazel.rc为项目公有文件，.bazelrc 为个人文件 </li>
 <li><p>没注意到七牛sdk的Pfop接口的key需要在七牛上有相应的文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//存储空间内指定资源的 URL。此处 URL 所指的资源内容对 mkzip 操作本身没有影响，</span><br><span class="line">//必填是由于 pfop 接口规格要求请求 body 中参数必须包含 bucket 和 key，因此 即使未对空间特定资</span><br><span class="line">//源进行操作，在执行 mkzip 操作时仍然需要指定账号下的特定空间和该空间的已有资源。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//存储空间内指定资源的 URL。此处 URL 所指的资源内容对 mkzip 操作本身没有影响，</span><br><span class="line">//必填是由于 pfop 接口规格要求请求 body 中参数必须包含 bucket 和 key，因此 即使未对空间特定资</span><br><span class="line">//源进行操作，在执行 mkzip 操作时仍然需要指定账号下的特定空间和该空间的已有资源。</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>fmt.Printf 或者 fmt.Sprintf 在第一个参数中有%且不传第二个参数时</p>
+<li><p>fmt.Printf 或者 fmt.Sprintf 在第一个参数中有%且不传第二个参数时,会有显示问题</p>
 </li>
-<li>golang使用exec.Command时，需要注意不能多空格或者少空格，如下：<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">args := <span class="string">"-y -safe 0 -f concat -i "</span> + filesList + <span class="string">" -c:v copy "</span> + genAudioFullName</span><br><span class="line">cmd := exec.Command(<span class="string">"ffmpeg"</span>, strings.Split(args, <span class="string">" "</span>)...)</span><br></pre></td></tr></table></figure>
+<li><p>golang使用exec.Command时，需要注意不能多空格或者少空格，如下：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">args := <span class="string">"-y -safe 0 -f concat -i "</span> + filesList + <span class="string">" -c:v copy "</span> + genAudioFullName</span><br><span class="line">cmd := exec.Command(<span class="string">"ffmpeg"</span>, strings.Split(args, <span class="string">" "</span>)...)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ticker记得stop</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ticker := time.NewTicker(<span class="number">5</span> * time.Second)</span><br><span class="line"><span class="keyword">defer</span> ticker.Stop()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件路径拼接使用path.Join而不是字符串拼接，好处是join拼接的时候路径没有/会自动添加</p>
 </li>
 </ol>
 
