@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Joey&#39;blog">
 <meta property="og:description" content="2018 学习笔记，持续更新">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-20T14:41:53.172Z">
+<meta property="og:updated_time" content="2018-06-18T13:48:54.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2018学习笔记">
 <meta name="twitter:description" content="2018 学习笔记，持续更新">
@@ -217,10 +217,7 @@
 </li>
 </ol>
 <p>注：需要在template.yml 文件中显示写出，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Resources:</span><br><span class="line">  concatAudio:</span><br><span class="line">    Type: AWS::Serverless::Function</span><br><span class="line">    Properties:</span><br><span class="line">      Handler: ConcatAudio</span><br><span class="line">      Timeout: 20</span><br><span class="line">      Runtime: go1.x</span><br><span class="line">      Tracing: Active</span><br><span class="line">      CodeUri: ./concatAudioHandle</span><br><span class="line">      Environment:</span><br><span class="line">        Variables:</span><br><span class="line">          AWS_SRC_BUCKET:</span><br><span class="line">          AWS_DST_BUCKET:</span><br><span class="line">      Events:</span><br><span class="line">        GetEvent:</span><br><span class="line">          Type: Api</span><br><span class="line">          Properties:</span><br><span class="line">            Path: /</span><br><span class="line">            Method: post</span><br></pre></td></tr></table></figure></p>
-<h3 id="aws-s3"><a href="#aws-s3" class="headerlink" title="aws s3"></a>aws s3</h3><ol>
-<li>列出s3上的文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ aws s3 ls s3://&lt;BUCKET_NAME&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### aws s3</span><br><span class="line"></span><br><span class="line">1. 列出s3上的文件</span><br><span class="line">```bash</span><br><span class="line">$ aws s3 ls s3://&lt;BUCKET_NAME&gt;</span><br></pre></td></tr></table></figure>
 <h1 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h1><ol>
 <li>生成proto.go文件(golang)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ protoc --go_out=plugins=grpc:. *.proto</span><br></pre></td></tr></table></figure>
 </li>
@@ -230,6 +227,9 @@
 <li>项目中使用的依赖（包括间接依赖）需要<strong><strong>显式</strong></strong>的在项目的WORKSPACE文件中添加，第三方依赖需要加上commit id</li>
 <li><p>在同一个包含有不同的导入路径，需要申明2次，如</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">github_go_repository(</span><br><span class="line">    name = &quot;com_qiniupkg_x&quot;,</span><br><span class="line">    importpath = &quot;qiniupkg.com/x&quot;,</span><br><span class="line">    # 2015-07-21</span><br><span class="line">    commit = &quot;946c4a16076d6d98aeb78619e2bd4012357f7228&quot;,</span><br><span class="line">    package = &quot;qiniu/x&quot;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">github_go_repository(</span><br><span class="line">    name = &quot;com_github_qiniu_x&quot;,</span><br><span class="line">    # 2015-07-21</span><br><span class="line">    commit = &quot;946c4a16076d6d98aeb78619e2bd4012357f7228&quot;,</span><br><span class="line">    package = &quot;qiniu/x&quot;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>别人更新了proto的repo后有缓存导致编译失败，使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export BAZEL_RUNID=$RANDOM</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>使用gazelle 生成含有protobuf的BUILD 文件时</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//todo</span><br></pre></td></tr></table></figure>
@@ -271,6 +271,13 @@
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ticker := time.NewTicker(<span class="number">5</span> * time.Second)</span><br><span class="line"><span class="keyword">defer</span> ticker.Stop()</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>文件路径拼接使用path.Join而不是字符串拼接，好处是join拼接的时候路径没有/会自动添加</p>
+</li>
+<li>shell 中for循环中export变量时，不要在for循环外加括号，否则只在for循环中生效</li>
+<li>生成文件考虑cdn问题,工作中遇到一个生成audio的需求，开始是想用文件内容的签名作为文件名，然后缓存s3的url到mongo里面，后来发现这样可能会有问题，比如文件内容是abc，生成的签名位xyz，然后生成了一段audio，但是这段audio可能是有问题的，然后现在需要重新生成，但是签名因为内容没变还是xyz，这样生成的url还是一样的，这样虽然audio更新了，但是cdn那边不会更新，因为cdn是根据文件名来判断文件是否更新的</li>
+<li>mongo没有uint64，工作中一个需求是把proto某个id为uint64的结构存入mongo中，然后导出到pb，但是后来实现的时候发现mongo没有这个类型（可能是因为有些语言不支持uint64？）所以直接在内部构造了一个与proto相同的结构，但是id为string类型，等到需要导出到pb的时候再转一把</li>
+<li>不弹出登录框，工作中写web登陆中间件的时候发现没有弹出登录框，后来在header里面加了一个”WWW-Authenticate”字段就好了</li>
+<li>brew install jq ，mac安装命令行json工具</li>
+<li>mac安装autojump<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install autojump</span><br><span class="line"><span class="comment">#~/.zshrc 文件添加如下</span></span><br><span class="line">[[ -s `brew --prefix`/etc/autojump.sh ]] &amp;&amp; . `brew --prefix`/etc/autojump.sh</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 
